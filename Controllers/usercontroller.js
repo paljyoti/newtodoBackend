@@ -2,7 +2,6 @@ import userModel from "../Models/usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
 // Register
 const RegisterUser = async (req, res) => {
   try {
@@ -71,7 +70,7 @@ const LoginUser = async (req, res) => {
       const token = jwt.sign({ id: exist._id }, "todoApp", {
         expiresIn: 86400,
       });
-      res.cookie("token", token, { maxAge: 9000000, httpOnly: true });
+      res.cookie("token", token, { maxAge: 9000000, httpOnly: true, secure: true });
       return res
         .status(201)
         .json({ status: true, message: " Login successfully" });
@@ -88,13 +87,12 @@ const LoginUser = async (req, res) => {
   }
 };
 
- const logout = async (req, res) => {
+const logout = async (req, res) => {
   try {
     // Clear the token by setting an expired cookie
     res.cookie("token", "", { expires: new Date(0), httpOnly: true });
     res.status(201).json({ success: true, message: "Logged out successfully" });
   } catch (error) {
-   
     return res
       .status(500)
       .json({ status: false, message: "Failed to logout", err: error });
